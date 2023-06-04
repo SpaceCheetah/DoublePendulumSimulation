@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:df="clr-namespace:DynamicsFinal"
+             xmlns:vm="clr-namespace:DynamicsFinal.ViewModels"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             d:DataContext="{x:Static df:DesignPreviewViewModels.MainViewModel}"
+             x:Class="DynamicsFinal.Views.MainView"
+             x:DataType="vm:MainViewModel">
+    <Grid RowDefinitions="*,Auto">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*" MinWidth="250"/>
+        </Grid.ColumnDefinitions>
+        <Canvas Grid.Row="0" Grid.Column="0" Name="Canvas">
+            <!--Objects positioned in code-behind-->
+            <Rectangle Name="Border" Stroke="Black" StrokeThickness="5" StrokeLineCap="Round"/>
+            <Line Name="Line1" Stroke="Gray" StrokeThickness="5"/>
+            <Line Name="Line2" Stroke="Gray" StrokeThickness="5"/>
+            <Ellipse Name="Support" Width="15" Height="15" Fill="Black"/>
+            <Ellipse Name="PointA" Width="15" Height="15" Fill="Red"/>
+            <Ellipse Name="PointB" Width="15" Height="15" Fill="Blue"/>
+        </Canvas>
+        <lvc:PieChart Grid.Row="0" Grid.Column="1" Series="{Binding EnergyData}" LegendPosition="Left"/>
+        <Button Grid.Row="1" Grid.Column="0" Command="{Binding RunCommand}">Start</Button>
+    </Grid>
+</UserControl>
