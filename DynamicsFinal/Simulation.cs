@@ -7,14 +7,16 @@ public readonly struct StateVector {
 
     static double NormalizeAngle(double angle) {
         angle %= Math.Tau;
-        return angle < 0 ? Math.Tau + angle : angle;
+        return angle < 0 ? (Math.Tau + angle) : angle;
     }
     public StateVector(double theta1, double theta2, double omega1, double omega2) {
-        Theta1 = NormalizeAngle(theta1);
-        Theta2 = NormalizeAngle(theta2);
+        Theta1 = theta1;
+        Theta2 = theta2;
         Omega1 = omega1;
         Omega2 = omega2;
     }
+
+    public StateVector Normalize() => new StateVector(NormalizeAngle(Theta1), NormalizeAngle(Theta2), Omega1, Omega2);
     public static StateVector operator +(StateVector v1, StateVector v2) => new(v1.Theta1 + v2.Theta1, v1.Theta2 + v2.Theta2,
         v1.Omega1 + v2.Omega1, v1.Omega2 + v2.Omega2);
     public static StateVector operator *(StateVector v, double d) => new(v.Theta1 * d, v.Theta2 * d, v.Omega1 * d, v.Omega2 * d);
@@ -37,7 +39,7 @@ public class Simulation {
         StateVector k2 = Derivative(current + stepSize / 2 * k1);
         StateVector k3 = Derivative(current + stepSize / 2 * k2);
         StateVector k4 = Derivative(current + stepSize * k3);
-        return current + stepSize / 6 * (k1 + 2 * k2 + 2 * k3 + k4);
+        return (current + stepSize / 6 * (k1 + 2 * k2 + 2 * k3 + k4)).Normalize();
     }
     
     StateVector Derivative(StateVector vector) {
