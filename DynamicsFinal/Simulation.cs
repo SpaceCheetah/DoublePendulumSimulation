@@ -4,9 +4,14 @@ namespace DynamicsFinal;
 
 public readonly struct StateVector {
     public readonly double Theta1, Theta2, Omega1, Omega2;
+
+    static double NormalizeAngle(double angle) {
+        angle %= Math.Tau;
+        return angle < 0 ? Math.Tau + angle : angle;
+    }
     public StateVector(double theta1, double theta2, double omega1, double omega2) {
-        Theta1 = theta1;
-        Theta2 = theta2;
+        Theta1 = NormalizeAngle(theta1);
+        Theta2 = NormalizeAngle(theta2);
         Omega1 = omega1;
         Omega2 = omega2;
     }
