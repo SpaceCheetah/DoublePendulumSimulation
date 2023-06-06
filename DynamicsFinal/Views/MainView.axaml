@@ -4,17 +4,64 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:df="clr-namespace:DynamicsFinal"
              xmlns:vm="clr-namespace:DynamicsFinal.ViewModels"
+             xmlns:v="clr-namespace:DynamicsFinal.Views"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              d:DataContext="{x:Static df:DesignPreviewViewModels.MainViewModel}"
              x:Class="DynamicsFinal.Views.MainView"
              x:DataType="vm:MainViewModel">
-    <Grid RowDefinitions="*,Auto">
+    <UserControl.Resources>
+        <v:AngleConverter x:Key="AngleConverter"/>
+        <v:NumericUpDownConverter x:Key="NumericUpDownConverter"/>
+    </UserControl.Resources>
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*" Margin="10">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="*" MinWidth="250"/>
         </Grid.ColumnDefinitions>
-        <Canvas Grid.Row="0" Grid.Column="0" Name="Canvas">
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Center" FontWeight="Bold">Simulation values:</TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">θ₁:</TextBlock>
+        <Slider Grid.Row="1" Grid.Column="2" Minimum="0" Maximum="6.283185482025146484375" Value="{Binding Theta1}" IsEnabled="{Binding Editable}"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">θ₂:</TextBlock>
+        <Slider Grid.Row="2" Grid.Column="2" Minimum="0" Maximum="6.283185482025146484375" Value="{Binding Theta2}" IsEnabled="{Binding Editable}"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">ω₁ (°/s):</TextBlock>
+        <NumericUpDown Grid.Row="3" Grid.Column="2" ShowButtonSpinner="False" Watermark="0" 
+                       Value="{Binding Omega1, Converter={StaticResource AngleConverter}}" IsEnabled="{Binding Editable}"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">ω₂ (°/s):</TextBlock>
+        <NumericUpDown Grid.Row="4" Grid.Column="2" ShowButtonSpinner="False" Watermark="0"
+                       Value="{Binding Omega2, Converter={StaticResource AngleConverter}}" IsEnabled="{Binding Editable}"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" VerticalAlignment="Center">L₁ (m):</TextBlock>
+        <NumericUpDown Minimum="0.001" Grid.Row="5" Grid.Column="2" ShowButtonSpinner="False" Watermark="1"
+                       Value="{Binding L1, Converter={StaticResource NumericUpDownConverter}, ConverterParameter=1}" IsEnabled="{Binding Editable}"/>
+        <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center">L₂ (m):</TextBlock>
+        <NumericUpDown Minimum="0.001" Grid.Row="6" Grid.Column="2" ShowButtonSpinner="False" Watermark="1" 
+                       Value="{Binding L2, Converter={StaticResource NumericUpDownConverter}, ConverterParameter=1}" IsEnabled="{Binding Editable}"/>
+        <TextBlock Grid.Row="7" Grid.Column="0" VerticalAlignment="Center">m₁ (kg):</TextBlock>
+        <NumericUpDown Minimum="0.001" Grid.Row="7" Grid.Column="2" ShowButtonSpinner="False" Watermark="1" 
+                       Value="{Binding M1, Converter={StaticResource NumericUpDownConverter}, ConverterParameter=1}" IsEnabled="{Binding Editable}"/>
+        <TextBlock Grid.Row="8" Grid.Column="0" VerticalAlignment="Center">m₂ (kg):</TextBlock>
+        <NumericUpDown Minimum="0.001" Grid.Row="8" Grid.Column="2" ShowButtonSpinner="False" Watermark="1" 
+                       Value="{Binding M2, Converter={StaticResource NumericUpDownConverter}, ConverterParameter=1}" IsEnabled="{Binding Editable}"/>
+        <TextBlock Grid.Row="9" Grid.Column="0" VerticalAlignment="Center">G (m/s^2):</TextBlock>
+        <NumericUpDown Grid.Row="9" Grid.Column="2" ShowButtonSpinner="False" Watermark="9.81"
+                       Value="{Binding G, Converter={StaticResource NumericUpDownConverter}, ConverterParameter=9.81}" IsEnabled="{Binding Editable}"/>
+        <TextBlock Grid.Row="10" Grid.Column="0" VerticalAlignment="Center">Step size (s):</TextBlock>
+        <NumericUpDown Grid.Row="10" Grid.Column="2" ShowButtonSpinner="False" Watermark="0.0001" Increment="0.0001" Minimum="0.00001"
+                       Value="{Binding StepSize, Converter={StaticResource NumericUpDownConverter}, ConverterParameter=0.0001}" IsEnabled="{Binding Editable}"/>
+        <TextBlock Margin="0,10,0,0" Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Center" FontWeight="Bold">GUI values:</TextBlock>
+        <TextBlock Grid.Row="12" Grid.Column="0" VerticalAlignment="Center">Interval (s):</TextBlock>
+        <NumericUpDown Grid.Row="12" Grid.Column="2" ShowButtonSpinner="False" Watermark="0.01" Minimum="0.001" Increment="0.01"
+                       Value="{Binding Interval, Converter={StaticResource NumericUpDownConverter}, ConverterParameter=0.01}"/>
+        <TextBlock Grid.Row="13" Grid.Column="0" VerticalAlignment="Center">Speed:</TextBlock>
+        <NumericUpDown Grid.Row="13" Grid.Column="2" ShowButtonSpinner="False" Watermark="1" Minimum="0.001" Increment="0.1"
+                       Value="{Binding Speed, Converter={StaticResource NumericUpDownConverter}, ConverterParameter=1}"
+                       Margin="0,0,0,10"/>
+        <Button Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Command="{Binding RunCommand}" IsVisible="{Binding Editable}">Start</Button>
+        <Button Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Command="{Binding StopCommand}" IsVisible="{Binding !Editable}">Stop</Button>
+        <Canvas Grid.Row="0" Grid.Column="3" Grid.RowSpan="16" Name="Canvas">
             <!--Objects positioned in code-behind-->
             <Rectangle Name="Border" Stroke="Black" StrokeThickness="5" StrokeLineCap="Round"/>
             <Line Name="Line1" Stroke="Gray" StrokeThickness="5"/>
@@ -23,7 +70,6 @@
             <Ellipse Name="PointA" Width="15" Height="15" Fill="Red"/>
             <Ellipse Name="PointB" Width="15" Height="15" Fill="Blue"/>
         </Canvas>
-        <lvc:PieChart Grid.Row="0" Grid.Column="1" Series="{Binding EnergyData}" LegendPosition="Left"/>
-        <Button Grid.Row="1" Grid.Column="0" Command="{Binding RunCommand}">Start</Button>
+        <lvc:PieChart Grid.Row="0" Grid.Column="4" Grid.RowSpan="16" Series="{Binding EnergyData}" LegendPosition="Left" />
     </Grid>
 </UserControl>
